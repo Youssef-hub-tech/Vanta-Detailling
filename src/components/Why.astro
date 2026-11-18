@@ -1,0 +1,124 @@
+---
+import WheelArt from './WheelArt.astro';
+import { ui } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const w = ui[lang].why;
+---
+
+<section class="section section--alt why" id="why" aria-labelledby="why-title">
+  <div class="shell why__grid">
+    <div class="why__aside">
+      <div class="why__intro reveal">
+        <p class="eyebrow">{w.eyebrow}</p>
+        <h2 id="why-title">{w.title}</h2>
+        <p class="lead">{w.intro}</p>
+      </div>
+      <div class="why__art reveal" style="--i:1">
+        <WheelArt uid="why-wheel" label={lang === 'ar' ? 'صورة توضيحية لعجلة سيارة' : 'Illustration of a detailed wheel'} />
+      </div>
+    </div>
+
+    <dl class="why__list">
+      {w.items.map((item, i) => (
+        <div class="why__item reveal" style={`--i:${i}`}>
+          <span class="why__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <div class="why__body">
+            <dt>{item.name}</dt>
+            <dd>{item.desc}</dd>
+          </div>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<style>
+  .why__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    gap: clamp(2.5rem, 6vw, 6.5rem);
+    align-items: start;
+  }
+  .why__aside {
+    position: sticky;
+    inset-block-start: calc(var(--nav-h) + 2.5rem);
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  .why__intro {
+    display: grid;
+    gap: 1.2rem;
+  }
+  .why__intro h2 {
+    max-width: 14ch;
+  }
+  .why__intro .lead {
+    max-width: 34ch;
+    font-size: 1rem;
+  }
+  .why__art {
+    max-inline-size: 26rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .why__list {
+    display: grid;
+  }
+  .why__item {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: clamp(1.6rem, 3vw, 2.25rem);
+    border-block-start: 1px solid var(--line);
+  }
+  .why__item:last-child {
+    border-block-end: 1px solid var(--line);
+  }
+  .why__num {
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    padding-block-start: 0.5rem;
+  }
+  .why__body {
+    display: grid;
+    gap: 0.55rem;
+  }
+  .why__body dt {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2vw, 1.6rem);
+    line-height: 1.15;
+  }
+  html[lang='ar'] .why__body dt {
+    font-family: var(--font-ar-display);
+    font-weight: 600;
+  }
+  .why__body dd {
+    color: var(--muted);
+    font-size: 0.975rem;
+    max-width: 46ch;
+  }
+
+  @media (max-width: 60rem) {
+    .why__grid {
+      grid-template-columns: 1fr;
+    }
+    .why__aside {
+      position: static;
+    }
+    .why__art {
+      max-inline-size: 15rem;
+      justify-self: center;
+      order: 2;
+    }
+    .why__grid {
+      gap: 2.75rem;
+    }
+    .why__intro h2 {
+      max-width: none;
+    }
+  }
+</style>

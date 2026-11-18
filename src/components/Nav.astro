@@ -1,0 +1,268 @@
+---
+import Brand from './Brand.astro';
+import WhatsApp from './icons/WhatsApp.astro';
+import { ui, waLink } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const links = ['services', 'pricing', 'gallery', 'why', 'contact'];
+const wa = waLink(t.wa);
+---
+
+<header class="nav" data-nav>
+  <div class="shell nav__inner">
+    <Brand lang={lang} href={t.path} />
+
+    <button
+      class="nav__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-toggle
+    >
+      <span class="sr-only" data-label-open={t.menu} data-label-close={t.close}>{t.menu}</span>
+      <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+    </button>
+
+    <nav class="nav__panel" id="site-menu" aria-label={t.a11y.primaryNav} data-panel>
+      <ul class="nav__links">
+        {links.map((key) => (
+          <li><a href={`#${key}`}>{t.nav[key]}</a></li>
+        ))}
+      </ul>
+
+      <div class="nav__utils">
+        <a
+          class="lang"
+          href={t.altPath}
+          hreflang={t.altLocale}
+          lang={t.altLocale}
+          aria-label={t.switchAria}>{t.switchLabel}</a>
+        <a
+          class="btn btn--sm nav__cta"
+          href={wa}
+          target="_blank"
+          rel="noopener"
+          aria-label={t.cta.whatsappAria}>
+          <WhatsApp />
+          <span>{t.cta.primary}</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 100;
+    border-block-end: 1px solid transparent;
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease),
+      backdrop-filter 0.35s var(--ease);
+  }
+  .nav.is-stuck,
+  html.nav-open .nav {
+    background: rgba(7, 7, 8, 0.82);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    border-block-end-color: var(--line);
+  }
+  .nav__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-block-size: var(--nav-h);
+  }
+  .nav__panel {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.75rem);
+  }
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.1rem, 2.2vw, 2rem);
+  }
+  .nav__links a {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.4rem;
+    color: var(--soft);
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    transition: color 0.2s var(--ease);
+  }
+  html[lang='ar'] .nav__links a {
+    font-size: 0.95rem;
+  }
+  .nav__links a::after {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-end: 0;
+    inline-size: 100%;
+    block-size: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: inline-start;
+    transition: transform 0.3s var(--ease);
+  }
+  .nav__links a:hover {
+    color: var(--paper);
+  }
+  .nav__links a:hover::after,
+  .nav__links a[aria-current]::after {
+    transform: scaleX(1);
+  }
+  .nav__links a[aria-current] {
+    color: var(--paper);
+  }
+  .nav__utils {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .lang {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    padding-inline: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    color: var(--soft);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lang:hover {
+    color: var(--paper);
+    border-color: var(--line-strong);
+  }
+  html[lang='ar'] .lang {
+    font-family: var(--font-sans);
+    letter-spacing: 0;
+  }
+  .nav__toggle {
+    display: none;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  .nav__bars {
+    position: relative;
+    display: block;
+    inline-size: 1.15rem;
+    block-size: 0.7rem;
+  }
+  .nav__bars i {
+    position: absolute;
+    inset-inline: 0;
+    block-size: 1px;
+    background: currentColor;
+    transition: transform 0.25s var(--ease), inset-block-start 0.25s var(--ease);
+  }
+  .nav__bars i:first-child {
+    inset-block-start: 0;
+  }
+  .nav__bars i:last-child {
+    inset-block-start: 0.65rem;
+  }
+  html.nav-open .nav__bars i:first-child {
+    inset-block-start: 0.32rem;
+    transform: rotate(45deg);
+  }
+  html.nav-open .nav__bars i:last-child {
+    inset-block-start: 0.32rem;
+    transform: rotate(-45deg);
+  }
+
+  @media (max-width: 68rem) {
+    :global(html.nav-open) {
+      overflow: hidden;
+    }
+    .nav__toggle {
+      display: grid;
+    }
+    .nav__panel {
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline: calc(var(--gutter) * -1) calc(var(--gutter) * -1);
+      display: grid;
+      gap: 1.5rem;
+      padding: 1.25rem var(--gutter) 2rem;
+      background: #09090a;
+      border-block-end: 1px solid var(--line);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.6);
+      max-block-size: calc(100svh - var(--nav-h));
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(-0.75rem);
+      transition: opacity 0.25s var(--ease), transform 0.25s var(--ease),
+        visibility 0.25s;
+    }
+    html.nav-open .nav__panel {
+      visibility: visible;
+      opacity: 1;
+      transform: none;
+    }
+    .nav__links {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .nav__links a {
+      display: block;
+      padding-block: 0.95rem;
+      border-block-end: 1px solid var(--line);
+      font-size: 1.05rem;
+    }
+    .nav__links a::after {
+      display: none;
+    }
+    .nav__utils {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+    .lang {
+      justify-content: center;
+      min-block-size: 3.25rem;
+      padding-inline: 1.1rem;
+    }
+    .nav__cta {
+      min-block-size: 3.25rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    .nav__utils {
+      grid-template-columns: 1fr;
+    }
+    .lang {
+      order: 2;
+    }
+  }
+  @media (max-width: 68rem) and (max-height: 660px) {
+    .nav__panel {
+      gap: 1rem;
+      padding-block: 0.75rem 1.25rem;
+    }
+    .nav__links a {
+      padding-block: 0.66rem;
+    }
+    .lang,
+    .nav__cta {
+      min-block-size: 2.9rem;
+    }
+  }
+</style>

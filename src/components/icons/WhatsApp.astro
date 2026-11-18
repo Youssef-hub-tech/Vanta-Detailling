@@ -1,0 +1,16 @@
+---
+// Simple line-and-fill chat mark. Drawn in-house so the site ships no third-party icon assets.
+const { class: cls } = Astro.props;
+---
+
+<svg class={cls || undefined} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path
+    d="M12 3.2a8.7 8.7 0 0 0-7.4 13.3L3.2 21l4.7-1.3A8.7 8.7 0 1 0 12 3.2Z"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linejoin="round"></path>
+  <path
+    d="M8.9 8.3c.3 2.7 2.1 4.5 4.8 4.8l1.1-1.4 1.8 1c.2 1.3-.6 2.2-2 2.4-3.3.5-6.9-3.1-6.4-6.4.2-1.4 1.1-2.2 2.4-2l1 1.8-1.4 1.1Z"
+    fill="currentColor"></path>
+</svg>

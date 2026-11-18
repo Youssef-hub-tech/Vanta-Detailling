@@ -1,0 +1,169 @@
+---
+import Brand from './Brand.astro';
+import { site, ui } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const links = ['services', 'pricing', 'gallery', 'why', 'contact'];
+---
+
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <Brand lang={lang} href={t.path} variant="footer" />
+        <p class="footer__tag">{t.footer.tag}</p>
+      </div>
+
+      <nav class="footer__col" aria-label={t.a11y.primaryNav}>
+        <h2 class="footer__title">{t.footer.navTitle}</h2>
+        <ul>
+          {links.map((key) => (
+            <li><a href={`#${key}`}>{t.nav[key]}</a></li>
+          ))}
+          <li><a href={t.altPath} hreflang={t.altLocale} lang={t.altLocale}>{t.switchLabel}</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__title">{t.footer.contactTitle}</h2>
+        <ul>
+          <li>{t.contact.address}</li>
+          <li><a class="link-underline" href={`tel:${site.phoneHref}`} dir="ltr">{site.phone}</a></li>
+          <li><a class="link-underline" href={`mailto:${site.email}`} dir="ltr">{site.email}</a></li>
+          <li>{t.contact.hours}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__legal">{t.footer.legal}</p>
+      <p class="footer__demo">{t.footer.demo}</p>
+      <a class="footer__top-link" href="#top">
+        <span>{t.footer.top}</span>
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+
+    <p class="footer__word" aria-hidden="true">VANTA</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    overflow: hidden;
+    border-block-start: 1px solid var(--line);
+    padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+    background: var(--ink);
+  }
+  .footer__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.7fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+  }
+  .footer__brand {
+    display: grid;
+    gap: 1.1rem;
+    align-content: start;
+  }
+  .footer__tag {
+    color: var(--muted);
+    font-size: 0.9rem;
+    max-width: 24ch;
+  }
+  .footer__title {
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-block-end: 1.1rem;
+    line-height: 1.4;
+  }
+  html[lang='ar'] .footer__title {
+    font-family: var(--font-ar);
+    letter-spacing: 0;
+    font-size: 0.78rem;
+  }
+  .footer__col ul {
+    display: grid;
+    gap: 0.6rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .footer__col a {
+    color: var(--soft);
+    transition: color 0.2s;
+  }
+  .footer__col a:hover {
+    color: var(--gold-hi);
+  }
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1rem 2.5rem;
+    margin-block-start: clamp(2.5rem, 5vw, 4rem);
+    padding-block-start: 1.75rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .footer__legal {
+    color: var(--muted);
+    font-size: 0.78rem;
+    max-width: 58ch;
+    flex: 1 1 26rem;
+  }
+  .footer__demo {
+    color: var(--muted);
+    font-size: 0.78rem;
+    opacity: 0.8;
+    flex: 1 1 16rem;
+    max-width: 34ch;
+  }
+  .footer__top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--soft);
+    font-size: 0.8rem;
+    transition: color 0.2s;
+  }
+  .footer__top-link:hover {
+    color: var(--gold-hi);
+  }
+  .footer__top-link svg {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+  .footer__word {
+    margin-block-start: clamp(2rem, 5vw, 3.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 17vw, 13rem);
+    line-height: 0.78;
+    letter-spacing: 0.14em;
+    text-align: center;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(242, 239, 231, 0.09);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 60rem) {
+    .footer__top {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 34rem) {
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

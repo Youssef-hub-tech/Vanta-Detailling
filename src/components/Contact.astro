@@ -1,0 +1,154 @@
+---
+import MapArt from './MapArt.astro';
+import WhatsApp from './icons/WhatsApp.astro';
+import { site, ui, waLink } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const c = t.contact;
+const wa = waLink(t.wa);
+---
+
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="shell contact__grid">
+    <div class="contact__body">
+      <div class="reveal">
+        <p class="eyebrow">{c.eyebrow}</p>
+        <h2 id="contact-title">{c.title}</h2>
+        <p class="lead contact__lead">{c.intro}</p>
+
+        <div class="actions">
+          <a class="btn" href={wa} target="_blank" rel="noopener" aria-label={t.cta.whatsappAria}>
+            <WhatsApp />
+            <span>{t.cta.primary}</span>
+          </a>
+          <a class="btn btn--line" href={site.mapsHref} target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+              <circle cx="12" cy="10" r="2.6" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+            </svg>
+            <span>{c.map}</span>
+          </a>
+        </div>
+      </div>
+
+      <dl class="contact__facts reveal" style="--i:1">
+        <div>
+          <dt>{c.labels[0]}</dt>
+          <dd>{c.address}</dd>
+        </div>
+        <div>
+          <dt>{c.labels[1]}</dt>
+          <dd>{c.hours}</dd>
+        </div>
+        <div>
+          <dt>{c.labels[2]}</dt>
+          <dd><a class="link-underline" href={`tel:${site.phoneHref}`} dir="ltr">{site.phone}</a></dd>
+        </div>
+        <div>
+          <dt>{c.labels[3]}</dt>
+          <dd><a class="link-underline" href={`mailto:${site.email}`} dir="ltr">{site.email}</a></dd>
+        </div>
+      </dl>
+
+      <p class="contact__demo reveal">{c.demo}</p>
+    </div>
+
+    <div class="contact__map reveal" style="--i:2">
+      <MapArt uid="studio-map" label={c.mapAlt} />
+      <span class="contact__tag" aria-hidden="true">{c.mapTag}</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: start;
+  }
+  .contact__body {
+    display: grid;
+    gap: clamp(2rem, 4vw, 2.75rem);
+  }
+  .contact__body h2,
+  .contact__body .eyebrow {
+    margin-block-end: 1.2rem;
+  }
+  .contact__lead {
+    max-width: 40ch;
+  }
+  .contact__facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+    border-block-start: 1px solid var(--line);
+  }
+  .contact__facts > div {
+    padding-block: 1.15rem;
+    border-block-end: 1px solid var(--line);
+  }
+  .contact__facts > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .contact__facts > div:last-child {
+    grid-column: 1 / -1;
+  }
+  .contact__facts dt {
+    color: var(--gold);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-block-end: 0.3rem;
+  }
+  html[lang='ar'] .contact__facts dt {
+    letter-spacing: 0;
+    font-size: 0.8rem;
+  }
+  .contact__facts dd {
+    color: var(--soft);
+    font-size: 0.975rem;
+  }
+  .contact__demo {
+    color: var(--muted);
+    font-size: 0.78rem;
+    max-width: 46ch;
+  }
+  .contact__map {
+    position: relative;
+    aspect-ratio: 5 / 4;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #0a0b0c;
+  }
+  .contact__tag {
+    position: absolute;
+    inset-block-end: 1rem;
+    inset-inline-start: 1rem;
+    padding: 0.35rem 0.7rem;
+    background: rgba(7, 7, 8, 0.7);
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+  }
+  @media (max-width: 60rem) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+    }
+    .contact__map {
+      aspect-ratio: 4 / 3;
+      order: -1;
+    }
+  }
+  @media (max-width: 34rem) {
+    .contact__facts {
+      grid-template-columns: 1fr;
+    }
+    .contact__facts > div:first-child {
+      grid-column: auto;
+    }
+  }
+</style>

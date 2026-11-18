@@ -1,0 +1,294 @@
+---
+import StudioCar from './StudioCar.astro';
+import WhatsApp from './icons/WhatsApp.astro';
+import { ui, waLink } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const h = t.hero;
+const wa = waLink(t.wa);
+---
+
+<section class="hero" id="top" data-hero>
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="shell hero__copy">
+    <div class="hero__top">
+      <p class="eyebrow hero__eyebrow">{h.eyebrow}</p>
+      <ul class="hero__tags" aria-label={t.nav.services}>
+        {h.meta.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+    <h1 class="hero__title">
+      <span class="hero__line">{h.h1[0]}</span>
+      <span class="hero__line hero__line--soft">{h.h1[1]}</span>
+    </h1>
+    <p class="lead hero__lead">{h.sub}</p>
+
+    <div class="actions hero__actions">
+      <a
+        class="btn"
+        href={wa}
+        target="_blank"
+        rel="noopener"
+        aria-label={t.cta.whatsappAria}>
+        <WhatsApp />
+        <span>{t.cta.primary}</span>
+      </a>
+      <a class="btn btn--line" href="#pricing">{t.cta.secondary}</a>
+    </div>
+  </div>
+
+  <div class="hero__veil" aria-hidden="true"></div>
+
+  <div class="hero__stage" data-parallax>
+    <StudioCar uid="hero" label={h.note} />
+    <p class="hero__note">{h.note}</p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100svh;
+    overflow: hidden;
+    background:
+      radial-gradient(58% 46% at 50% 92%, rgba(198, 164, 104, 0.09), transparent 72%),
+      radial-gradient(90% 62% at 50% 26%, #0d0e10 0%, #070708 68%);
+    isolation: isolate;
+  }
+  .hero__glow {
+    position: absolute;
+    inset-block-start: -18rem;
+    inset-inline-start: 50%;
+    inline-size: 46rem;
+    block-size: 46rem;
+    translate: -50% 0;
+    background: radial-gradient(circle, rgba(198, 164, 104, 0.11), transparent 62%);
+    filter: blur(10px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero__copy {
+    position: relative;
+    z-index: 2;
+    padding-block-start: calc(var(--nav-h) + clamp(1.5rem, 5vh, 3.5rem));
+    padding-block-end: clamp(3rem, 14vh, 9rem);
+  }
+  /* Scrim between the copy and the artwork: the car rises out of the dark
+     instead of colliding with the headline on short viewports. */
+  .hero__veil {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 74%;
+    z-index: 1;
+    background: linear-gradient(
+      180deg,
+      #070708 6%,
+      rgba(7, 7, 8, 0.9) 46%,
+      rgba(7, 7, 8, 0.45) 76%,
+      rgba(7, 7, 8, 0) 100%
+    );
+    pointer-events: none;
+  }
+  .hero__eyebrow {
+    color: var(--gold);
+  }
+  .hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem 2rem;
+  }
+  .hero__title {
+    margin-block-start: clamp(1rem, 2.2vw, 1.6rem);
+    max-width: 22ch;
+    font-size: clamp(2.6rem, 5.6vw, 5.2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+  }
+  html[lang='ar'] .hero__title {
+    max-width: 24ch;
+    line-height: 1.3;
+    font-size: clamp(2.2rem, 5vw, 4.1rem);
+  }
+  .hero__line {
+    display: block;
+  }
+  .hero__line--soft {
+    color: var(--soft);
+    font-style: italic;
+  }
+  html[lang='ar'] .hero__line--soft {
+    font-style: normal;
+    color: var(--paper);
+    opacity: 0.9;
+  }
+  .hero__lead {
+    margin-block-start: clamp(1.2rem, 2.4vw, 1.75rem);
+    max-width: 42ch;
+  }
+  .hero__actions {
+    margin-block-start: clamp(1.6rem, 3vw, 2.25rem);
+  }
+  .hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0;
+    margin-block-start: 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  html[lang='ar'] .hero__tags {
+    letter-spacing: 0;
+    font-size: 0.82rem;
+  }
+  .hero__tags li {
+    display: flex;
+    align-items: center;
+  }
+  .hero__tags li + li::before {
+    content: '';
+    inline-size: 2rem;
+    block-size: 1px;
+    margin-inline: 1rem;
+    background: var(--line-strong);
+  }
+  .hero__stage {
+    position: absolute;
+    inset-block-end: -2rem;
+    inset-inline: 0;
+    z-index: 0;
+    will-change: transform;
+    pointer-events: none;
+  }
+  .hero__stage :global(svg) {
+    inline-size: min(94%, 104rem);
+    margin-inline: auto;
+    translate: var(--px, 0) var(--py, 0);
+    transition: translate 0.9s var(--ease);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__stage :global(svg) {
+      translate: none;
+      transition: none;
+    }
+  }
+  .hero__note {
+    position: absolute;
+    inset-block-end: 0.6rem;
+    inset-inline-end: var(--gutter);
+    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    opacity: 0.8;
+  }
+
+  /* Entrance: copy rises, stage settles. The .js gate keeps it visible
+     without JavaScript, and reduced-motion collapses it to an instant state. */
+  @keyframes heroRise {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes stageIn {
+    from {
+      opacity: 0;
+      transform: translateY(2.5rem) scale(0.99);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .js .hero__eyebrow {
+    animation: heroRise 0.8s var(--ease) 0.05s both;
+  }
+  .js .hero__line:first-child {
+    animation: heroRise 0.9s var(--ease) 0.12s both;
+  }
+  .js .hero__line:last-child {
+    animation: heroRise 0.9s var(--ease) 0.22s both;
+  }
+  .js .hero__lead {
+    animation: heroRise 0.9s var(--ease) 0.34s both;
+  }
+  .js .hero__actions {
+    animation: heroRise 0.9s var(--ease) 0.44s both;
+  }
+  .js .hero__tags {
+    animation: heroRise 0.9s var(--ease) 0.54s both;
+  }
+  .js .hero__stage {
+    animation: stageIn 1.3s var(--ease) 0.3s both;
+  }
+
+  @media (max-width: 48rem) {
+    .hero {
+      min-block-size: auto;
+      padding-block-end: 1rem;
+    }
+    .hero__copy {
+      padding-block-start: calc(var(--nav-h) + 2.25rem);
+      padding-block-end: clamp(1.5rem, 4vh, 2.5rem);
+    }
+    .hero__veil {
+      display: none;
+    }
+    .hero__title {
+      font-size: clamp(2.4rem, 8.6vw, 3.4rem);
+      max-width: none;
+    }
+    html[lang='ar'] .hero__title {
+      font-size: clamp(2.1rem, 7.4vw, 2.9rem);
+    }
+    .hero__top {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .hero__lead {
+      max-width: 40ch;
+    }
+    .hero__stage {
+      position: relative;
+      inset-block-end: auto;
+      padding-block-start: 0.25rem;
+    }
+    .hero__stage :global(svg) {
+      inline-size: 108%;
+      margin-inline-start: -4%;
+    }
+    .hero__note {
+      position: static;
+      padding-block-start: 0.5rem;
+      text-align: center;
+    }
+  }
+  @media (max-height: 780px) and (min-width: 48.01rem) {
+    .hero__copy {
+      padding-block-end: 2rem;
+    }
+    .hero__title {
+      font-size: clamp(2.3rem, 4.6vw, 4rem);
+    }
+    .hero__actions {
+      margin-block-start: 1.4rem;
+    }
+    .hero__tags {
+      margin-block-start: 1.5rem;
+    }
+  }
+</style>

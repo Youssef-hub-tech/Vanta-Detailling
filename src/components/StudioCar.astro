@@ -1,0 +1,302 @@
+---
+/**
+ * Original studio illustration of a low grand-tourer coupé, side-on.
+ * Built entirely from vector shapes so it scales cleanly and ships no
+ * third-party imagery. Decorative by default; pass `label` for alt text.
+ */
+const { uid = 'car', label = '' } = Astro.props;
+const id = (suffix) => `${uid}-${suffix}`;
+const carId = id('body');
+
+// Side profile, drawn back to front. Proportions follow a real GT: overall
+// height ≈ 0.27 × length, wheelbase ≈ 0.6 × length, wheel Ø ≈ 0.25 × length.
+const BODY =
+  'M176 506 L174 458 C172 424 194 402 240 396 L340 392 C400 390 452 388 520 372 C560 330 602 288 646 266 C702 252 782 250 860 252 C930 258 998 302 1062 356 C1086 366 1112 372 1146 376 L1330 380 C1390 384 1424 402 1440 432 L1446 506 Z';
+
+const GLASS =
+  'M516 378 C556 330 606 288 660 272 C712 260 782 258 848 262 C912 268 970 310 1042 356 Z';
+
+const ARCHES = [
+  { cx: 430, r: 104 },
+  { cx: 1198, r: 104 },
+];
+
+const spokes = Array.from({ length: 10 }, (_, i) => i * 36);
+const lug = Array.from({ length: 5 }, (_, i) => i * 72 + 18);
+---
+
+<svg
+  class="studio-car"
+  viewBox="0 0 1600 640"
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id={id('stage')} cx="50%" cy="76%" r="64%">
+      <stop offset="0" stop-color="#332a1a" stop-opacity="0.9"></stop>
+      <stop offset="0.42" stop-color="#171410" stop-opacity="0.45"></stop>
+      <stop offset="1" stop-color="#070708" stop-opacity="0"></stop>
+    </radialGradient>
+
+    <linearGradient id={id('strip')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#c6a468" stop-opacity="0"></stop>
+      <stop offset="0.5" stop-color="#e4cd98" stop-opacity="0.9"></stop>
+      <stop offset="1" stop-color="#c6a468" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('paint')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#42464d"></stop>
+      <stop offset="0.12" stop-color="#31343a"></stop>
+      <stop offset="0.42" stop-color="#1a1c20"></stop>
+      <stop offset="0.74" stop-color="#0e0f12"></stop>
+      <stop offset="1" stop-color="#08090b"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('glass')} x1="0.1" y1="0" x2="0.3" y2="1">
+      <stop offset="0" stop-color="#31363f"></stop>
+      <stop offset="0.4" stop-color="#171a1d"></stop>
+      <stop offset="1" stop-color="#090a0c"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('sheen')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"></stop>
+      <stop offset="0.38" stop-color="#ffffff" stop-opacity="0.62"></stop>
+      <stop offset="0.68" stop-color="#f6e6c2" stop-opacity="0.48"></stop>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <radialGradient id={id('rim')} cx="36%" cy="30%" r="78%">
+      <stop offset="0" stop-color="#5a5f66"></stop>
+      <stop offset="0.45" stop-color="#2c2f35"></stop>
+      <stop offset="1" stop-color="#101215"></stop>
+    </radialGradient>
+
+    <linearGradient id={id('floor')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121214"></stop>
+      <stop offset="0.3" stop-color="#0a0a0b"></stop>
+      <stop offset="1" stop-color="#070708"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('fade')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.5"></stop>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"></stop>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <clipPath id={id('body-clip')}>
+      <path d={BODY}></path>
+    </clipPath>
+
+    <mask id={id('arch-mask')}>
+      <rect x="0" y="0" width="1600" height="640" fill="#fff"></rect>
+      {ARCHES.map((a) => (
+        <circle cx={a.cx} cy="470" r={a.r} fill="#000"></circle>
+      ))}
+    </mask>
+
+    <mask id={id('refl-mask')}>
+      <rect x="0" y="560" width="1600" height="80" fill={`url(#${id('fade')})`}></rect>
+    </mask>
+
+    <filter id={id('soft')} x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="7"></feGaussianBlur>
+    </filter>
+    <filter id={id('blur-sm')} x="-20%" y="-40%" width="140%" height="180%">
+      <feGaussianBlur stdDeviation="1.4"></feGaussianBlur>
+    </filter>
+    <filter id={id('refl-blur')} x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+    </filter>
+    <filter id={id('glow')} x="-140%" y="-140%" width="380%" height="380%">
+      <feGaussianBlur stdDeviation="9"></feGaussianBlur>
+    </filter>
+    <filter id={id('grain')} x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0"></feColorMatrix>
+    </filter>
+  </defs>
+
+  <!-- Stage light and the overhead tubes reflected in the paint -->
+  <ellipse cx="800" cy="500" rx="740" ry="260" fill={`url(#${id('stage')})`}></ellipse>
+  <g opacity="0.45" filter={`url(#${id('soft')})`}>
+    <rect x="250" y="250" width="1100" height="2" fill={`url(#${id('strip')})`} opacity="0.5"></rect>
+    <rect x="400" y="290" width="800" height="1.5" fill={`url(#${id('strip')})`} opacity="0.3"></rect>
+  </g>
+
+  <!-- Floor -->
+  <rect x="0" y="560" width="1600" height="80" fill={`url(#${id('floor')})`}></rect>
+  <path d="M0 560 H1600" stroke={`url(#${id('strip')})`} stroke-width="1" opacity="0.4"></path>
+
+  <!-- Contact shadow -->
+  <ellipse cx="810" cy="556" rx="620" ry="20" fill="#000" opacity="0.75" filter={`url(#${id('soft')})`}></ellipse>
+  <ellipse cx="810" cy="553" rx="430" ry="7" fill="#000" opacity="0.85"></ellipse>
+
+  <!-- Car -->
+  <g id={carId}>
+    {[430, 1198].map((cx, index) => (
+      <g>
+        <circle cx={cx} cy="470" r="90" fill="#07080a"></circle>
+        <circle cx={cx} cy="470" r="90" fill="none" stroke="#1b1e22" stroke-width="2"></circle>
+        <circle cx={cx} cy="470" r="76" fill="none" stroke="#0f1114" stroke-width="7"></circle>
+        <circle cx={cx} cy="470" r="67" fill={`url(#${id('rim')})`}></circle>
+        <circle cx={cx} cy="470" r="67" fill="none" stroke="#c6a468" stroke-opacity="0.22" stroke-width="1"></circle>
+
+        <!-- gold caliper -->
+        <path
+          d={`M${cx} 470 m-52 0 a52 52 0 0 1 ${index === 0 ? 36 : 30} -42`}
+          fill="none"
+          stroke="#a8803a"
+          stroke-width="13"
+          stroke-linecap="round"
+          opacity="0.85"></path>
+
+        <circle cx={cx} cy="470" r="56" fill="#0b0c0e"></circle>
+        {spokes.map((deg) => (
+          <rect
+            x={cx - 4}
+            y="414"
+            width="8"
+            height="46"
+            rx="3"
+            fill="#3a3e44"
+            transform={`rotate(${deg} ${cx} 470)`}></rect>
+        ))}
+        {spokes.map((deg) => (
+          <rect
+            x={cx - 1}
+            y="414"
+            width="2"
+            height="46"
+            fill="#8d939c"
+            opacity="0.35"
+            transform={`rotate(${deg} ${cx} 470)`}></rect>
+        ))}
+        <circle cx={cx} cy="470" r="20" fill="#0d0f12" stroke="#33373d" stroke-width="1.5"></circle>
+        {lug.map((deg) => (
+          <circle
+            cx={cx}
+            cy="456"
+            r="2.4"
+            fill="#8b9099"
+            opacity="0.7"
+            transform={`rotate(${deg} ${cx} 470)`}></circle>
+        ))}
+        <circle cx={cx} cy="470" r="5" fill="#c6a468"></circle>
+      </g>
+    ))}
+
+    <!-- Body shell with the wheel arches cut out -->
+    <g mask={`url(#${id('arch-mask')})`}>
+      <path d={BODY} fill={`url(#${id('paint')})`}></path>
+
+      <g clip-path={`url(#${id('body-clip')})`}>
+        <!-- shoulder reflection -->
+        <path
+          d="M250 412 C560 400 900 388 1330 384"
+          fill="none"
+          stroke={`url(#${id('sheen')})`}
+          stroke-width="30"
+          opacity="0.15"
+          filter={`url(#${id('blur-sm')})`}></path>
+        <path
+          d="M258 410 C560 398 900 386 1330 382"
+          fill="none"
+          stroke={`url(#${id('sheen')})`}
+          stroke-width="2"
+          opacity="0.55"></path>
+
+        <!-- crisp roofline highlight -->
+        <path
+          d="M660 268 L860 254 C910 258 954 296 1000 330"
+          fill="none"
+          stroke="#e7ecf2"
+          stroke-width="1.4"
+          opacity="0.4"
+          filter={`url(#${id('blur-sm')})`}></path>
+
+        <!-- character line along the doors -->
+        <path
+          d="M300 472 C620 464 980 460 1300 466"
+          fill="none"
+          stroke="#050506"
+          stroke-width="1.2"
+          opacity="0.8"></path>
+
+        <!-- greenhouse -->
+        <path d={GLASS} fill={`url(#${id('glass')})`}></path>
+        <path d={GLASS} fill="none" stroke="#aab1ba" stroke-width="1" opacity="0.34"></path>
+
+        <!-- B-pillar and glass reflections -->
+        <path d="M768 266 L772 372" stroke="#08090b" stroke-width="9"></path>
+        <path d="M592 322 L650 274" stroke="#ffffff" stroke-opacity="0.14" stroke-width="3"></path>
+        <path d="M866 272 L920 300" stroke="#ffffff" stroke-opacity="0.08" stroke-width="5"></path>
+        <!-- rear quarter divider -->
+        <path d="M596 316 L634 372" stroke="#08090b" stroke-width="4" opacity="0.75"></path>
+
+        <!-- interior hint through the glass -->
+        <path d="M700 292 C780 282 840 284 880 296 L880 340 L706 340 Z" fill="#141618" opacity="0.55"></path>
+
+        <!-- door shut lines and handle -->
+        <path d="M1024 372 C1028 412 1028 460 1022 506" fill="none" stroke="#040405" stroke-width="1.6" opacity="0.85"></path>
+        <path d="M524 404 C520 438 520 474 524 506" fill="none" stroke="#040405" stroke-width="1.2" opacity="0.5"></path>
+        <path d="M904 404 h46" stroke="#c6a468" stroke-width="2" stroke-linecap="round" opacity="0.5"></path>
+
+        <!-- mirror -->
+        <path d="M1012 344 C1030 334 1050 336 1060 346 L1048 360 C1034 358 1020 352 1012 348 Z" fill="#1c1f23"></path>
+        <path d="M1018 346 C1032 339 1046 340 1054 346" fill="none" stroke="#c6a468" stroke-width="1" opacity="0.45"></path>
+
+        <!-- headlight -->
+        <path d="M1316 380 L1448 398 L1448 418 L1316 398 Z" fill="#e7eef7" opacity="0.9"></path>
+        <path d="M1316 380 L1448 398 L1448 418 L1316 398 Z" fill="#cfe2ff" opacity="0.45" filter={`url(#${id('glow')})`}></path>
+        <path d="M1352 388 L1440 402" stroke="#ffffff" stroke-width="1.4" opacity="0.8"></path>
+
+        <!-- tail light -->
+        <path d="M186 438 L268 398 L274 418 L192 458 Z" fill="#7e1b1e"></path>
+        <path d="M194 440 L264 406" stroke="#ff5157" stroke-width="3" opacity="0.75"></path>
+        <path d="M186 438 L268 398 L274 418 L192 458 Z" fill="#c0393c" opacity="0.3" filter={`url(#${id('glow')})`}></path>
+
+        <!-- front intake and lower valance -->
+        <path d="M1292 452 L1446 462 L1444 496 L1290 486 Z" fill="#040405" opacity="0.92"></path>
+        <path d="M250 490 L1330 490 L1324 506 L256 506 Z" fill="#050507"></path>
+        <path d="M300 458 C620 450 980 450 1300 458" fill="none" stroke="#c6a468" stroke-width="1" opacity="0.18"></path>
+
+        <!-- arch lips catch the room light -->
+        <path d="M330 470 A100 100 0 0 1 530 470" fill="none" stroke="#c6a468" stroke-width="1.4" opacity="0.24"></path>
+        <path d="M1098 470 A100 100 0 0 1 1298 470" fill="none" stroke="#c6a468" stroke-width="1.4" opacity="0.24"></path>
+        <path d="M330 470 A100 100 0 0 1 530 470" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.14" filter={`url(#${id('blur-sm')})`}></path>
+      </g>
+    </g>
+
+    <!-- wheels sit proud of the arch edge -->
+    <circle cx="430" cy="470" r="7" fill="#0a0b0d" stroke="#c6a468" stroke-width="1" opacity="0.75"></circle>
+    <circle cx="1198" cy="470" r="7" fill="#0a0b0d" stroke="#c6a468" stroke-width="1" opacity="0.75"></circle>
+  </g>
+
+  <!-- floor reflection -->
+  <g
+    transform="translate(0 1120) scale(1 -1)"
+    opacity="0.22"
+    filter={`url(#${id('refl-blur')})`}
+    mask={`url(#${id('refl-mask')})`}>
+    <use href={`#${carId}`}></use>
+  </g>
+
+  <!-- film grain, kept very low so it reads as texture rather than noise -->
+  <rect
+    x="0"
+    y="0"
+    width="1600"
+    height="640"
+    filter={`url(#${id('grain')})`}
+    opacity="0.05"
+    style="mix-blend-mode:soft-light"></rect>
+</svg>
+
+<style>
+  .studio-car {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+</style>

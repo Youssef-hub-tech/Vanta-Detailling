@@ -1,0 +1,112 @@
+---
+import SectionHead from './SectionHead.astro';
+import { ui } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const s = ui[lang].services;
+---
+
+<section class="section services" id="services" aria-labelledby="services-title">
+  <div class="shell">
+    <SectionHead
+      eyebrow={s.eyebrow}
+      title={s.title}
+      intro={s.intro}
+      id="services-title"
+    />
+
+    <ul class="services__grid">
+      {s.items.map((item, i) => (
+        <li class="services__item reveal" style={`--i:${i % 2}`}>
+          <span class="services__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <h3>{item.name}</h3>
+          <p>{item.desc}</p>
+          <span class="services__line" aria-hidden="true"></span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    padding-block-start: calc(var(--section) * 0.9);
+  }
+  .services__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 6vw, 5rem);
+    border-block-start: 1px solid var(--line);
+  }
+  .services__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.25rem minmax(0, 1fr);
+    grid-template-areas:
+      'num title'
+      'num desc';
+    align-content: start;
+    gap: 0.55rem 0.5rem;
+    padding-block: clamp(1.9rem, 3.6vw, 2.9rem);
+    border-block-end: 1px solid var(--line);
+    transition: background 0.45s var(--ease);
+  }
+  .services__item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(198, 164, 104, 0.055), transparent 68%);
+    opacity: 0;
+    transition: opacity 0.45s var(--ease);
+    pointer-events: none;
+  }
+  html[dir='rtl'] .services__item::before {
+    background: linear-gradient(270deg, rgba(198, 164, 104, 0.055), transparent 68%);
+  }
+  .services__item:hover::before {
+    opacity: 1;
+  }
+  .services__num {
+    grid-area: num;
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    padding-block-start: 0.45rem;
+  }
+  .services__item h3 {
+    grid-area: title;
+    font-size: clamp(1.35rem, 2.1vw, 1.7rem);
+  }
+  .services__item p {
+    grid-area: desc;
+    color: var(--muted);
+    font-size: 0.975rem;
+    line-height: 1.7;
+    max-width: 44ch;
+  }
+  .services__line {
+    position: absolute;
+    inset-block-end: -1px;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: inline-start;
+    transition: transform 0.5s var(--ease);
+    opacity: 0.55;
+  }
+  .services__item:hover .services__line {
+    transform: scaleX(1);
+  }
+
+  @media (max-width: 52rem) {
+    .services__grid {
+      grid-template-columns: 1fr;
+    }
+    .services__item {
+      padding-block: 1.9rem;
+    }
+  }
+</style>

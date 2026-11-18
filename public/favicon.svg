@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VANTA">
+  <rect width="64" height="64" rx="12" fill="#0a0a0b"/>
+  <path d="M14 17.5 L32 48.5 L50 17.5" fill="none" stroke="#c6a468" stroke-width="5.2" stroke-linejoin="miter"/>
+  <path d="M25 17.5 L32 29.8 L39 17.5" fill="none" stroke="#0a0a0b" stroke-width="1.8"/>
+</svg>

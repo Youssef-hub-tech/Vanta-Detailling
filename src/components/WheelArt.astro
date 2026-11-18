@@ -1,0 +1,151 @@
+---
+/**
+ * Wheel study — an original vector close-up used beside the "why" list.
+ * Ten spokes, a gold caliper and water beading. No third-party imagery.
+ */
+const { uid = 'wheel', label = '' } = Astro.props;
+const id = (s) => `${uid}-${s}`;
+const beads = Array.from({ length: 30 }, (_, i) => {
+  const angle = (-38 + i * 9.4) * (Math.PI / 180);
+  const radius = 196 + (i % 4) * 12;
+  return {
+    cx: 330 + Math.cos(angle) * radius,
+    cy: 330 + Math.sin(angle) * radius,
+    r: 1.4 + (i % 4) * 0.8,
+  };
+});
+---
+
+<svg
+  class="wheel-art"
+  viewBox="0 0 640 640"
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id={id('bg')} cx="42%" cy="38%" r="72%">
+      <stop offset="0" stop-color="#221d14"></stop>
+      <stop offset="0.55" stop-color="#0d0e10"></stop>
+      <stop offset="1" stop-color="#070708"></stop>
+    </radialGradient>
+    <radialGradient id={id('rim')} cx="38%" cy="32%" r="80%">
+      <stop offset="0" stop-color="#4d5157"></stop>
+      <stop offset="0.45" stop-color="#2a2d31"></stop>
+      <stop offset="1" stop-color="#111316"></stop>
+    </radialGradient>
+    <linearGradient id={id('spoke')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#565a61"></stop>
+      <stop offset="0.5" stop-color="#33363b"></stop>
+      <stop offset="1" stop-color="#1b1d21"></stop>
+    </linearGradient>
+    <radialGradient id={id('vignette')} cx="50%" cy="50%" r="70%">
+      <stop offset="0.5" stop-color="#000" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#000" stop-opacity="0.65"></stop>
+    </radialGradient>
+    <filter id={id('soft')} x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16"></feGaussianBlur>
+    </filter>
+    <filter id={id('grain')} x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="3"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0"></feColorMatrix>
+    </filter>
+  </defs>
+
+  <rect width="640" height="640" fill={`url(#${id('bg')})`}></rect>
+  <ellipse cx="330" cy="470" rx="260" ry="80" fill="#c6a468" opacity="0.05" filter={`url(#${id('soft')})`}></ellipse>
+
+  <!-- tyre -->
+  <circle cx="330" cy="330" r="258" fill="#060708"></circle>
+  <circle cx="330" cy="330" r="252" fill="none" stroke="#1c1f23" stroke-width="2"></circle>
+  <circle cx="330" cy="330" r="228" fill="none" stroke="#0e1013" stroke-width="26"></circle>
+  <circle cx="330" cy="330" r="210" fill="none" stroke="#16191d" stroke-width="2"></circle>
+
+  <!-- rim barrel -->
+  <circle cx="330" cy="330" r="196" fill={`url(#${id('rim')})`}></circle>
+  <circle cx="330" cy="330" r="196" fill="none" stroke="#c6a468" stroke-opacity="0.4" stroke-width="1.4"></circle>
+  <circle cx="330" cy="330" r="188" fill="none" stroke="#0c0d10" stroke-width="3" opacity="0.7"></circle>
+
+  <!-- brake disc, visible between the spokes -->
+  <circle cx="330" cy="330" r="170" fill="#15171a"></circle>
+  <circle cx="330" cy="330" r="168" fill="#1e2126"></circle>
+  <circle cx="330" cy="330" r="168" fill="none" stroke="#2f3339" stroke-width="1.5"></circle>
+  <circle cx="330" cy="330" r="126" fill="none" stroke="#2a2e33" stroke-width="1.5"></circle>
+  {Array.from({ length: 16 }).map((_, i) => (
+    <circle
+      cx="330"
+      cy="182"
+      r="3.4"
+      fill="#0b0c0e"
+      stroke="#3a3f45"
+      stroke-width="0.8"
+      transform={`rotate(${i * 22.5} 330 330)`}></circle>
+  ))}
+
+  <!-- gold caliper -->
+  <path
+    d="M330 330 m-140 0 a140 140 0 0 1 99 -135"
+    fill="none"
+    stroke="#a8803a"
+    stroke-width="24"
+    stroke-linecap="round"
+    opacity="0.95"></path>
+  <path
+    d="M330 330 m-140 0 a140 140 0 0 1 99 -135"
+    fill="none"
+    stroke="#f0d8a4"
+    stroke-width="2"
+    stroke-linecap="round"
+    opacity="0.55"></path>
+
+  <!-- spokes -->
+  <g>
+    {Array.from({ length: 10 }).map((_, i) => (
+      <g transform={`rotate(${i * 36} 330 330)`}>
+        <path d="M318 156 L330 140 L342 156 L338 276 L322 276 Z" fill={`url(#${id('spoke')})`}></path>
+        <path d="M326 152 L330 146 L334 152 L332 272 L328 272 Z" fill="#8b919a" opacity="0.3"></path>
+      </g>
+    ))}
+  </g>
+
+  <!-- hub -->
+  <circle cx="330" cy="330" r="62" fill="#0f1114" stroke="#2c2f34" stroke-width="1.5"></circle>
+  <circle cx="330" cy="330" r="50" fill={`url(#${id('rim')})`}></circle>
+  <circle cx="330" cy="330" r="50" fill="none" stroke="#c6a468" stroke-opacity="0.5" stroke-width="1"></circle>
+  {Array.from({ length: 5 }).map((_, i) => (
+    <circle
+      cx="330"
+      cy="292"
+      r="3.2"
+      fill="#a9aeb6"
+      opacity="0.65"
+      transform={`rotate(${i * 72 + 18} 330 330)`}></circle>
+  ))}
+  <path d="M318 320 L330 342 L342 320" fill="none" stroke="#e4cd98" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+
+  <!-- water beads -->
+  <g>
+    {beads.map((b) => (
+      <g>
+        <circle cx={b.cx} cy={b.cy} r={b.r} fill="#dfe6ec" fill-opacity="0.22" stroke="#ffffff" stroke-opacity="0.35" stroke-width="0.6"></circle>
+        <circle cx={b.cx - b.r * 0.3} cy={b.cy - b.r * 0.3} r={b.r * 0.34} fill="#ffffff" opacity="0.5"></circle>
+      </g>
+    ))}
+  </g>
+
+  <!-- highlights -->
+  <path d="M120 290 A210 210 0 0 1 300 124" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="4" filter={`url(#${id('soft')})`}></path>
+  <path d="M516 400 A200 200 0 0 0 470 500" fill="none" stroke="#c6a468" stroke-opacity="0.25" stroke-width="2"></path>
+
+  <rect width="640" height="640" fill={`url(#${id('vignette')})`}></rect>
+  <rect width="640" height="640" filter={`url(#${id('grain')})`} opacity="0.04" style="mix-blend-mode:soft-light"></rect>
+</svg>
+
+<style>
+  .wheel-art {
+    display: block;
+    inline-size: 100%;
+    block-size: auto;
+    border-radius: 3px;
+  }
+</style>

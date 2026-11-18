@@ -1,0 +1,219 @@
+---
+/**
+ * Macro study of a painted body panel, in two states.
+ *
+ * Both variants use identical geometry: one dark surface filling the frame,
+ * with the studio's strip lights reflected across it. `before` dulls the
+ * reflections, adds oxidation haze, swirl marks and dried water spots;
+ * `after` sharpens the highlight and adds metallic flake. Because only the
+ * surface treatment changes, the comparison slider reads as one panel.
+ * Original vector artwork — no photography.
+ */
+const { uid = 'paint', variant = 'after', label = '' } = Astro.props;
+const dull = variant === 'before';
+const id = (s) => `${uid}-${s}`;
+
+const swirls = Array.from({ length: 26 }, (_, i) => {
+  const cx = 60 + ((i * 223) % 1080);
+  const cy = 110 + ((i * 157) % 560);
+  const r = 16 + ((i * 43) % 62);
+  const start = ((i * 53) % 360) * (Math.PI / 180);
+  const sweep = (46 + ((i * 17) % 120)) * (Math.PI / 180);
+  const x0 = cx + r * Math.cos(start);
+  const y0 = cy + r * Math.sin(start);
+  const x1 = cx + r * Math.cos(start + sweep);
+  const y1 = cy + r * Math.sin(start + sweep);
+  return {
+    d: `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`,
+    o: 0.14 + ((i % 4) * 0.06),
+  };
+});
+
+const spots = Array.from({ length: 16 }, (_, i) => ({
+  cx: 90 + ((i * 181) % 1010),
+  cy: 140 + ((i * 103) % 480),
+  rx: 2 + (i % 4),
+  ry: 3 + ((i + 1) % 5),
+}));
+
+const flakes = Array.from({ length: 90 }, (_, i) => ({
+  cx: 20 + ((i * 137) % 1160),
+  cy: 40 + ((i * 83) % 620),
+  o: 0.12 + ((i % 6) * 0.05),
+  r: 0.8 + (i % 3) * 0.3,
+}));
+---
+
+<svg
+  class="paint"
+  viewBox="0 0 1200 700"
+  preserveAspectRatio="xMidYMid slice"
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id={id('surface')} x1="0.1" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color={dull ? '#2b2d31' : '#3a3e45'}></stop>
+      <stop offset="0.22" stop-color={dull ? '#1c1e21' : '#23262b'}></stop>
+      <stop offset="0.55" stop-color={dull ? '#121316' : '#111317'}></stop>
+      <stop offset="1" stop-color="#07080a"></stop>
+    </linearGradient>
+
+    <radialGradient id={id('bloom')} cx="52%" cy="16%" r="62%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity={dull ? '0.06' : '0.16'}></stop>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0.02"></stop>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+    </radialGradient>
+
+    <linearGradient id={id('strip')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7ecd4" stop-opacity="0"></stop>
+      <stop offset="0.16" stop-color="#fdf6e6" stop-opacity="0.95"></stop>
+      <stop offset="0.62" stop-color="#e9d6ab" stop-opacity="0.75"></stop>
+      <stop offset="1" stop-color="#c6a468" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('strip-cool')} x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#dbe6f4" stop-opacity="0"></stop>
+      <stop offset="0.3" stop-color="#ffffff" stop-opacity="0.85"></stop>
+      <stop offset="0.75" stop-color="#cfdcea" stop-opacity="0.5"></stop>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <linearGradient id={id('haze')} x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0" stop-color="#9d9a92" stop-opacity="0.26"></stop>
+      <stop offset="0.5" stop-color="#6d6b66" stop-opacity="0.1"></stop>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <radialGradient id={id('vignette')} cx="48%" cy="44%" r="76%">
+      <stop offset="0.5" stop-color="#000000" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.72"></stop>
+    </radialGradient>
+
+    <linearGradient id={id('floor')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c6a468" stop-opacity="0"></stop>
+      <stop offset="0.4" stop-color="#c6a468" stop-opacity="0.16"></stop>
+      <stop offset="1" stop-color="#c6a468" stop-opacity="0"></stop>
+    </linearGradient>
+
+    <filter id={id('blur-lg')} x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation={dull ? 22 : 7}></feGaussianBlur>
+    </filter>
+    <filter id={id('blur-sm')} x="-20%" y="-80%" width="140%" height="260%">
+      <feGaussianBlur stdDeviation={dull ? 9 : 1.6}></feGaussianBlur>
+    </filter>
+    <filter id={id('grain')} x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="11"></feTurbulence>
+      <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.45 0"></feColorMatrix>
+    </filter>
+  </defs>
+
+  <!-- the panel itself -->
+  <rect width="1200" height="700" fill={`url(#${id('surface')})`}></rect>
+  <rect width="1200" height="700" fill={`url(#${id('bloom')})`}></rect>
+
+  <!-- reflections of the studio, softened when the clearcoat is tired -->
+  <g transform="rotate(-6 600 350)" filter={`url(#${id('blur-lg')})`}>
+    <rect x="-140" y="150" width="1520" height={dull ? 54 : 62} fill={`url(#${id('strip')})`} opacity={dull ? 0.2 : 0.72}></rect>
+  </g>
+  <g transform="rotate(-6 600 350)">
+    <rect x="-140" y="236" width="1520" height={dull ? 8 : 9} fill={`url(#${id('strip-cool')})`} opacity={dull ? 0.08 : 0.34} filter={`url(#${id('blur-sm')})`}></rect>
+    <rect x="-140" y="330" width="1520" height="2" fill={`url(#${id('strip')})`} opacity={dull ? 0.05 : 0.2}></rect>
+  </g>
+  <g transform="rotate(-6 600 350)" filter={`url(#${id('blur-lg')})`}>
+    <rect x="-140" y="430" width="1520" height="30" fill={`url(#${id('strip')})`} opacity={dull ? 0.06 : 0.22}></rect>
+  </g>
+
+  <!-- warm bounce from the floor -->
+  <rect x="0" y="560" width="1200" height="140" fill={`url(#${id('floor')})`} opacity={dull ? 0.4 : 1}></rect>
+
+  <!-- panel seam: a door gap crossing the frame -->
+  <path
+    d="M846 -20 C880 180 878 470 918 720"
+    fill="none"
+    stroke="#040507"
+    stroke-width="4"
+    opacity="0.85"></path>
+  <path
+    d="M852 -20 C886 180 884 470 924 720"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="1"
+    opacity={dull ? 0.04 : 0.12}
+    filter={`url(#${id('blur-sm')})`}></path>
+
+  {dull ? (
+    <>
+      <!-- oxidation and flat sheen -->
+      <rect width="1200" height="700" fill={`url(#${id('haze')})`}></rect>
+      <ellipse cx="600" cy="330" rx="560" ry="220" fill="#a8a49a" opacity="0.05" filter={`url(#${id('blur-lg')})`}></ellipse>
+
+      <!-- swirl marks from careless washing -->
+      <g>
+        {swirls.map((s) => (
+          <path
+            d={s.d}
+            fill="none"
+            stroke="#f4efe2"
+            stroke-width="1"
+            stroke-opacity={s.o}
+            stroke-linecap="round"></path>
+        ))}
+      </g>
+
+      <!-- dried water spots and dust -->
+      <g>
+        {spots.map((s) => (
+          <ellipse
+            cx={s.cx}
+            cy={s.cy}
+            rx={s.rx}
+            ry={s.ry}
+            fill="#ded8c9"
+            fill-opacity="0.05"
+            stroke="#efe9da"
+            stroke-opacity="0.24"
+            stroke-width="0.8"></ellipse>
+        ))}
+      </g>
+      <rect width="1200" height="700" filter={`url(#${id('grain')})`} opacity="0.16" style="mix-blend-mode:soft-light"></rect>
+    </>
+  ) : (
+    <>
+      <!-- tight, mirror-sharp highlight along the shoulder -->
+      <path
+        d="M-40 244 C300 214 720 206 1240 236"
+        fill="none"
+        stroke="#ffffff"
+        stroke-opacity="0.14"
+        stroke-width="2"
+        filter={`url(#${id('blur-sm')})`}></path>
+      <path
+        d="M-40 250 C300 220 720 212 1240 242"
+        fill="none"
+        stroke="#f8eddc"
+        stroke-opacity="0.1"
+        stroke-width="10"
+        filter={`url(#${id('blur-lg')})`}></path>
+
+      <!-- metallic flake -->
+      <g>
+        {flakes.map((f) => (
+          <circle cx={f.cx} cy={f.cy} r={f.r} fill="#f2e8d4" opacity={f.o}></circle>
+        ))}
+      </g>
+      <rect width="1200" height="700" filter={`url(#${id('grain')})`} opacity="0.05" style="mix-blend-mode:soft-light"></rect>
+    </>
+  )}
+
+  <rect width="1200" height="700" fill={`url(#${id('vignette')})`}></rect>
+</svg>
+
+<style>
+  .paint {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+</style>

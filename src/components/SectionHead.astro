@@ -1,0 +1,11 @@
+---
+const { eyebrow, title, intro, id } = Astro.props;
+---
+
+<header class="sec-head reveal">
+  <p class="eyebrow">{eyebrow}</p>
+  <div class="sec-head__row">
+    <h2 id={id}>{title}</h2>
+    {intro && <p class="sec-head__intro">{intro}</p>}
+  </div>
+</header>

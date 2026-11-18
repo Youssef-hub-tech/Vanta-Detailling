@@ -1,0 +1,106 @@
+---
+/** Stylised, original map plate. No embedded third-party map, no tracking. */
+const { uid = 'map', label = '' } = Astro.props;
+const id = (s) => `${uid}-${s}`;
+---
+
+<svg
+  class="map-art"
+  viewBox="0 0 800 560"
+  preserveAspectRatio="xMidYMid slice"
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+  xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id={id('grid')} width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 H0 V40" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"></path>
+    </pattern>
+    <radialGradient id={id('vignette')} cx="50%" cy="50%" r="72%">
+      <stop offset="0.45" stop-color="#000" stop-opacity="0"></stop>
+      <stop offset="1" stop-color="#000" stop-opacity="0.7"></stop>
+    </radialGradient>
+    <linearGradient id={id('road')} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c6a468" stop-opacity="0.05"></stop>
+      <stop offset="0.5" stop-color="#c6a468" stop-opacity="0.4"></stop>
+      <stop offset="1" stop-color="#c6a468" stop-opacity="0.05"></stop>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="560" fill="#0a0b0c"></rect>
+  <rect width="800" height="560" fill={`url(#${id('grid')})`}></rect>
+
+  <!-- city blocks -->
+  <g fill="#101214" stroke="#191b1e" stroke-width="1">
+    <rect x="46" y="54" width="126" height="84" rx="2"></rect>
+    <rect x="196" y="42" width="92" height="96" rx="2"></rect>
+    <rect x="212" y="160" width="150" height="70" rx="2"></rect>
+    <rect x="60" y="164" width="112" height="112" rx="2"></rect>
+    <rect x="72" y="306" width="130" height="88" rx="2"></rect>
+    <rect x="228" y="262" width="108" height="132" rx="2"></rect>
+    <rect x="386" y="60" width="120" height="104" rx="2"></rect>
+    <rect x="530" y="48" width="96" height="90" rx="2"></rect>
+    <rect x="404" y="196" width="112" height="112" rx="2"></rect>
+    <rect x="548" y="170" width="150" height="94" rx="2"></rect>
+    <rect x="470" y="338" width="120" height="96" rx="2"></rect>
+    <rect x="620" y="300" width="112" height="118" rx="2"></rect>
+    <rect x="360" y="446" width="150" height="72" rx="2"></rect>
+    <rect x="120" y="426" width="128" height="86" rx="2"></rect>
+    <rect x="540" y="456" width="120" height="60" rx="2"></rect>
+  </g>
+
+  <!-- roads -->
+  <g fill="none" stroke="#1e2024" stroke-linecap="round">
+    <path d="M0 148 H800" stroke-width="14"></path>
+    <path d="M0 148 H800" stroke-width="1" stroke="#2c2f34"></path>
+    <path d="M188 0 V560" stroke-width="12"></path>
+    <path d="M188 0 V560" stroke-width="1" stroke="#2c2f34"></path>
+    <path d="M0 276 H800" stroke-width="10"></path>
+    <path d="M360 0 V560" stroke-width="9"></path>
+    <path d="M0 408 H800" stroke-width="8"></path>
+    <path d="M620 0 V560" stroke-width="8"></path>
+    <path d="M-20 560 L 420 180 L 820 -20" stroke-width="11" stroke="#22252a"></path>
+  </g>
+
+  <!-- route to the studio -->
+  <path d="M620 470 L 620 408 L 470 408 L 470 330 L 396 330 L 396 286" fill="none" stroke={`url(#${id('road')})`} stroke-width="3"></path>
+
+  <!-- location pin -->
+  <g transform="translate(396 286)">
+    <circle r="58" fill="#c6a468" opacity="0.08" class="map__pulse"></circle>
+    <circle r="34" fill="#c6a468" opacity="0.12"></circle>
+    <circle r="18" fill="#0a0b0c" stroke="#c6a468" stroke-width="1.4"></circle>
+    <circle r="5" fill="#e4cd98"></circle>
+    <path d="M0 18 V 44" stroke="#c6a468" stroke-width="1.2" opacity="0.6"></path>
+  </g>
+
+  <rect width="800" height="560" fill={`url(#${id('vignette')})`}></rect>
+</svg>
+
+<style>
+  .map-art {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+  .map__pulse {
+    animation: mapPulse 4.5s var(--ease) infinite;
+    transform-origin: center;
+  }
+  @keyframes mapPulse {
+    0%,
+    100% {
+      opacity: 0.08;
+      transform: scale(0.9);
+    }
+    50% {
+      opacity: 0.16;
+      transform: scale(1.08);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .map__pulse {
+      animation: none;
+    }
+  }
+</style>

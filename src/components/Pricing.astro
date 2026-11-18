@@ -1,0 +1,191 @@
+---
+import SectionHead from './SectionHead.astro';
+import WhatsApp from './icons/WhatsApp.astro';
+import { ui, waLink } from '../i18n/ui.js';
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const p = t.pricing;
+const waFor = (tier) => waLink(`${t.wa} (${tier.name})`);
+---
+
+<section class="section section--alt pricing" id="pricing" aria-labelledby="pricing-title">
+  <div class="shell">
+    <SectionHead
+      eyebrow={p.eyebrow}
+      title={p.title}
+      intro={p.intro}
+      id="pricing-title"
+    />
+
+    <div class="pricing__grid">
+      {p.tiers.map((tier, i) => (
+        <article class:list={['tier', tier.rec && 'tier--rec', 'reveal']} style={`--i:${i}`}>
+          {tier.rec && <p class="tier__badge">{p.recommended}</p>}
+          <h3 class="tier__name">{tier.name}</h3>
+
+          <p class="tier__price">
+            <span class="tier__from">{p.from}</span>
+            <bdi class="tier__amount" dir="ltr">{tier.price}</bdi>
+            <span class="tier__cur">{p.cur}</span>
+          </p>
+
+          <p class="tier__time">
+            <span>{p.time}</span>
+            <span class="tier__dot" aria-hidden="true"></span>
+            <span>{tier.time}</span>
+          </p>
+
+          <ul class="tier__feat">
+            {tier.feat.map((feat) => (
+              <li>
+                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path d="M2.5 8.5 6.2 12 13.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span>{feat}</span>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            class:list={['btn', !tier.rec && 'btn--line', 'tier__cta']}
+            href={waFor(tier)}
+            target="_blank"
+            rel="noopener"
+            aria-label={`${t.cta.whatsappAria} — ${tier.name}`}>
+            <WhatsApp />
+            <span>{t.cta.primary}</span>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <p class="pricing__note reveal">{p.note}</p>
+  </div>
+</section>
+
+<style>
+  .pricing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.9rem, 1.6vw, 1.4rem);
+    align-items: stretch;
+  }
+  .tier {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.6rem, 2.4vw, 2.25rem);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    transition: transform 0.35s var(--ease), border-color 0.35s var(--ease),
+      background 0.35s var(--ease);
+  }
+  .tier:hover {
+    transform: translateY(-4px);
+    border-color: var(--line-strong);
+  }
+  .tier--rec {
+    background: linear-gradient(180deg, #1a1710 0%, #101011 58%, var(--panel) 100%);
+    border-color: rgba(198, 164, 104, 0.5);
+    box-shadow: 0 40px 90px -60px rgba(198, 164, 104, 0.55);
+  }
+  .tier--rec:hover {
+    border-color: var(--gold);
+  }
+  .tier__badge {
+    position: absolute;
+    inset-block-start: -1px;
+    inset-inline-start: clamp(1.6rem, 2.4vw, 2.25rem);
+    padding: 0.25rem 0.7rem;
+    background: var(--gold);
+    color: #0a0a0a;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 0 0 2px 2px;
+  }
+  html[lang='ar'] .tier__badge {
+    letter-spacing: 0;
+    font-size: 0.72rem;
+  }
+  .tier__name {
+    font-size: clamp(1.6rem, 2.3vw, 2rem);
+    padding-block-start: 0.5rem;
+  }
+  .tier__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    margin-block: 1.15rem 0.35rem;
+  }
+  .tier__from,
+  .tier__cur {
+    color: var(--muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  .tier__amount {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 4vw, 3.4rem);
+    line-height: 1;
+    color: var(--gold-hi);
+    letter-spacing: -0.01em;
+  }
+  .tier__time {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-block-end: 1.35rem;
+    border-block-end: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .tier__dot {
+    inline-size: 3px;
+    block-size: 3px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .tier__feat {
+    display: grid;
+    gap: 0.75rem;
+    margin-block: 1.5rem;
+    font-size: 0.95rem;
+    color: var(--soft);
+    flex: 1;
+  }
+  .tier__feat li {
+    display: grid;
+    grid-template-columns: 1.15rem minmax(0, 1fr);
+    gap: 0.6rem;
+    align-items: start;
+    line-height: 1.55;
+  }
+  .tier__feat svg {
+    inline-size: 0.95rem;
+    block-size: 0.95rem;
+    margin-block-start: 0.28em;
+    color: var(--gold);
+  }
+  .tier__cta {
+    inline-size: 100%;
+    margin-block-start: auto;
+  }
+  .pricing__note {
+    margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
+    color: var(--muted);
+    font-size: 0.85rem;
+    max-width: 68ch;
+  }
+
+  @media (max-width: 62rem) {
+    .pricing__grid {
+      grid-template-columns: 1fr;
+      max-inline-size: 30rem;
+      margin-inline: auto;
+    }
+  }
+</style>
